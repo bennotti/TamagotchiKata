@@ -56,3 +56,5 @@ When time passes
 Then it's tiredness is increased
 And it's hungriness is increased
 And it's happiness is decreased
+
+@Source http://agilekatas.co.uk/katas/Tamagotchi-Kata

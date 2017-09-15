@@ -15,53 +15,91 @@ namespace TamagotchiKataTest
         public void BeMoreFullnessAndHaveLessStarvingWhenWeFeedHim()
         {
             var tamagotchi = new Tamagotchi();
-            var increase = 6;
-            var decrease = 4;
 
-            tamagotchi.Feed();
+            var needs = tamagotchi.Feed();
 
-            increase.Should().BeGreaterOrEqualTo(tamagotchi.Fullness);
-            decrease.Should().BeLessOrEqualTo(tamagotchi.Hungriness);
+            needs.Fullness.Should().BeGreaterThan(10);
+            needs.Hungriness.Should().BeLessThan(10);
         }
 
         [Test]
         public void BeMoreTiredAndMoreHappierWhenWePlayWithHim()
         {
             var tamagotchi = new Tamagotchi();
-            var increase = 6;
 
-            tamagotchi.Play();
+            var needs = tamagotchi.Play();
 
-            increase.Should().BeGreaterOrEqualTo(tamagotchi.Happiness);
-            increase.Should().BeGreaterOrEqualTo(tamagotchi.Tiredness);
+            needs.Tiredness.Should().BeGreaterThan(10);
+            needs.Happiness.Should().BeGreaterThan(10);
         }
     }
 
     public class Tamagotchi
     {
-        public int Hungriness;
-        public int Fullness;
-        public int Happiness;
-        public int Tiredness;
+        private Needs _needs;
 
-        public Tamagotchi()
+        public Tamagotchi() {}
+
+        public Needs Feed()
         {
-            Hungriness = 5;
-            Fullness = 5;
-            Happiness = 5;
-            Tiredness = 5;
+            _needs = new Feed();
+            _needs.SendingNeeds();
+
+            return _needs;
         }
 
-        public void Feed()
+        public Needs Play()
         {
-            Hungriness -= 1;
-            Fullness += 1;
+            _needs = new Play();
+            _needs.SendingNeeds();
+
+            return _needs;
+        }
+    }
+
+    public abstract class Needs
+    {
+        public int Hungriness  { get; protected set; }
+        public int Fullness    { get; protected set; }
+        public int Happiness   { get; protected set; }
+        public int Tiredness   { get; protected set; }
+
+        public Needs()
+        {
+            Hungriness = 10;
+            Fullness = 10;
+            Happiness = 10;
+            Tiredness = 10;
         }
 
-        internal void Play()
+        public abstract void SendingNeeds();
+
+        protected int Increase(int mood)
         {
-            Happiness += 1;
-            Tiredness += 1;
+            return mood += 1;
+        }
+
+        protected int Decrease(int mood)
+        {
+            return mood -= 1;
+        }
+    }
+
+    public class Feed : Needs
+    {
+        public override void SendingNeeds()
+        {
+            Hungriness = Decrease(Hungriness);
+            Fullness = Increase(Fullness);
+        }
+    }
+
+    public class Play : Needs
+    {
+        public override void SendingNeeds()
+        {
+            Tiredness = Increase(Tiredness);
+            Happiness = Increase(Happiness);
         }
     }
 }

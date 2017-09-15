@@ -32,6 +32,38 @@ namespace TamagotchiKataTest
             needs.Tiredness.Should().BeGreaterThan(10);
             needs.Happiness.Should().BeGreaterThan(10);
         }
+
+        [Test]
+        public void BeLessTiredWhenWePuttingInBed()
+        {
+            var tamagotchi = new Tamagotchi();
+
+            var needs = tamagotchi.Sleep();
+
+            needs.Tiredness.Should().BeLessThan(10);
+        }
+
+        [Test]
+        public void BeLessFullnessWhenWeMakePoop()
+        {
+            var tamagotchi = new Tamagotchi();
+
+            var needs = tamagotchi.MakeAPoop();
+
+            needs.Fullness.Should().BeLessThan(10);
+        }
+
+        [Test]
+        public void BeMoreTiredAndMoreStarveAndLessHappierWhenTheTimePasses()
+        {
+            var tamagotchi = new Tamagotchi();
+
+            var needs = tamagotchi.TimePassed();
+
+            needs.Tiredness.Should().BeGreaterThan(10);
+            needs.Hungriness.Should().BeGreaterThan(10);
+            needs.Happiness.Should().BeLessThan(10);
+        }
     }
 
     public class Tamagotchi
@@ -54,6 +86,48 @@ namespace TamagotchiKataTest
             _needs.SendingNeeds();
 
             return _needs;
+        }
+
+        public Needs Sleep()
+        {
+            _needs = new Sleep();
+            _needs.SendingNeeds();
+
+            return _needs;
+        }
+
+        public Needs MakeAPoop()
+        {
+            _needs = new MakeAPoop();
+            _needs.SendingNeeds();
+
+            return _needs;
+        }
+
+        public Needs TimePassed()
+        {
+            _needs = new TimePasses();
+            _needs.SendingNeeds();
+
+            return _needs;
+        }
+    }
+
+    public class TimePasses : Needs
+    {
+        public override void SendingNeeds()
+        {
+            Tiredness = Increase(Tiredness);
+            Hungriness = Increase(Hungriness);
+            Happiness = Decrease(Happiness);
+        }
+    }
+
+    public class MakeAPoop : Needs
+    {
+        public override void SendingNeeds()
+        {
+            Fullness = Decrease(Fullness);
         }
     }
 
@@ -100,6 +174,14 @@ namespace TamagotchiKataTest
         {
             Tiredness = Increase(Tiredness);
             Happiness = Increase(Happiness);
+        }
+    }
+
+    public class Sleep : Needs
+    {
+        public override void SendingNeeds()
+        {
+            Tiredness = Decrease(Tiredness);
         }
     }
 }
